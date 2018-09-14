@@ -13,3 +13,19 @@
 	Password: sistemas
  crear base de datos dbprueba (con las opciones por defecto)
  en dbprueba crear "categoria"
+
+20180912
+ crear tabla categoria mediante ddl
+ configurar git localmente
+  git config --global user.name carmar04
+  git config --global user.email 2dam.csoro@institutoserpis.org
+  git config --global push.default simple
+
+create tabla categoria (
+  id serial primary key,
+  nombre varchar(50) not null unique
+);
+
+insert into categoria (nombre) values ('categoria 1');
+insert into categoria (nombre) values ('categoria 2');
+insert into categoria (nombre) values ('categoria 3');
