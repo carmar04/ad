@@ -29,3 +29,10 @@ create tabla categoria (
 insert into categoria (nombre) values ('categoria 1');
 insert into categoria (nombre) values ('categoria 2');
 insert into categoria (nombre) values ('categoria 3');
+
+20180914
+ Propuesta para instalar Ubuntu 16.04 LTS
+ Propuesta para instalar monodevelop
+ #skip-name-resolve=1
+ Host 127.0.0.1 no tiene permiso para conectarse a la base de datos
+ Para arreglar esto incluimos ssl-mode=none en la conection string
