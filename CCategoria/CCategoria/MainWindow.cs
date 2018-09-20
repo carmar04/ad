@@ -1,11 +1,41 @@
 ﻿using System;
 using Gtk;
+using System.Data;
+using System.Collections.Generic;
+using MySql.Data.MySqlClient;
 
 public partial class MainWindow : Gtk.Window
 {
+	private static string[] getFieldNames(IDataReader dataReader)
+    {
+        //int fieldCount = dataReader.FieldCount;
+        //string [] fieldNames = new string[fieldCount];
+        //for (int index = 0; index < fieldCount; index++)
+        //{
+        //fieldNames.SetValue(dataReader.GetName(index), index);
+        //}
+        //return fieldNames;
+        List<string> fieldNamelist = new List<string>();
+        int fieldCount = dataReader.FieldCount;
+        for (int index = 0; index < dataReader.FieldCount; index++)
+        {
+            fieldNamelist.Add(dataReader.GetName(index));
+        }
+        return fieldNamelist.ToArray();
+    }
     public MainWindow() : base(Gtk.WindowType.Toplevel)
     {
         Build();
+
+		IDbConnection dbConnection = new MySqlConnection(
+                "server=localhost;" +
+                "database=dbprueba;" +
+                "user=root;" +
+                "password=sistemas;" +
+                "ssl-mode=none;"
+            );
+		dbConnection.Open();
+
 		treeView.AppendColumn("ID", new CellRendererText(), "text", 0);
 		treeView.AppendColumn("Nombre", new CellRendererText(), "text", 1);
 
@@ -13,6 +43,9 @@ public partial class MainWindow : Gtk.Window
 		treeView.Model = listStore;
 		listStore.AppendValues("1", "categoria 1");
 		listStore.AppendValues("2", "categoria 2");
+
+		dbConnection.Close();
+        
     }
 
     protected void OnDeleteEvent(object sender, DeleteEventArgs a)
