@@ -36,13 +36,24 @@ public partial class MainWindow : Gtk.Window
             );
 		dbConnection.Open();
 
-		treeView.AppendColumn("ID", new CellRendererText(), "text", 0);
-		treeView.AppendColumn("Nombre", new CellRendererText(), "text", 1);
+		IDbCommand dbCommand = dbConnection.CreateCommand();
+		dbCommand.CommandText = "select * from categoria order by 1";
+		IDataReader dataReader = dbCommand.ExecuteReader();
 
-		ListStore listStore = new ListStore(typeof(string), typeof(string));
+		for (int index = 0; index < dataReader.FieldCount;index++){
+			treeView.AppendColumn(getFieldNames(dataReader)[index], new CellRendererText(), "text", index);
+		} 
+	//	treeView.AppendColumn("ID", new CellRendererText(), "text", 0);
+	//	treeView.AppendColumn("Nombre", new CellRendererText(), "text", 1);
+
+		ListStore listStore = new ListStore(typeof(int), typeof(string));
 		treeView.Model = listStore;
-		listStore.AppendValues("1", "categoria 1");
-		listStore.AppendValues("2", "categoria 2");
+		while(dataReader.Read()){
+			listStore.AppendValues(dataReader[0],dataReader[1]);
+			Console.WriteLine(dataReader[0].GetType());
+		}
+	//	listStore.AppendValues("1", "categoria 1");
+	//	listStore.AppendValues("2", "categoria 2");
 
 		dbConnection.Close();
         
