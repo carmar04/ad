@@ -47,32 +47,39 @@ public partial class MainWindow : Gtk.Window
 
 		CellRendererText cellRendererText = new CellRendererText();
         
-		treeView.AppendColumn(
-			"ID",
-			cellRendererText,
-			delegate (TreeViewColumn tree_column, CellRenderer cell, TreeModel tree_model, TreeIter iter) {
+	//	treeView.AppendColumn(
+	//		"ID",
+	//		cellRendererText,
+	//		delegate (TreeViewColumn tree_column, CellRenderer cell, TreeModel tree_model, TreeIter iter) {
 				//    Categoria categoria = (Categoria) tree_model.GetValue(iter, 0);
 				//    cellRendererText.Text = categoria.Id + "";
-				object model = tree_model.GetValue(iter, 0);
-				object value = model.GetType().GetProperty("Id").GetValue(model);
-				cellRendererText.Text = value + "";
-			}
-		);
+	//			object model = tree_model.GetValue(iter, 0);
+	//			object value = model.GetType().GetProperty("Id").GetValue(model);
+	//			cellRendererText.Text = value + "";
+	//		}
+	//	);
               
 		string[] properties = new string[] { "Id", "Nombre" };
-		foreach(string property in properties){
+		foreach (string property in properties) {
+			
 			string propertyName = property;
-			treeView.AppendColumn(
-            property,
-            cellRendererText,
-            delegate (TreeViewColumn tree_column, CellRenderer cell, TreeModel tree_model, TreeIter iter) {
+			treeView.AppendColumn (
+				
+                property,
+                cellRendererText,
+                delegate (
+					
+					  TreeViewColumn tree_column,
+				      CellRenderer cell,
+				      TreeModel tree_model,
+				      TreeIter iter) {
                 //   Categoria categoria = (Categoria) tree_model.GetValue(iter, 0);
                 //   cellRendererText.Text = categoria.Nombre + "";
                 object model = tree_model.GetValue(iter, 0);
 				object value = model.GetType().GetProperty(property).GetValue(model);
                 cellRendererText.Text = value + "";
-            }
-        );
+                }
+            );
 		}
 		                                
 
