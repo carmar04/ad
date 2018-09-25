@@ -25,6 +25,8 @@ public partial class MainWindow : Gtk.Window
         }
         return fieldNamelist.ToArray();
     }
+	private IDbConnection dbConnection;
+
     public MainWindow() : base(Gtk.WindowType.Toplevel)
     {
         Build();
@@ -32,7 +34,7 @@ public partial class MainWindow : Gtk.Window
 		object obj = null;
 		Console.WriteLine("" + obj);
 
-		IDbConnection dbConnection = new MySqlConnection(
+		dbConnection = new MySqlConnection(
                 "server=localhost;" +
                 "database=dbprueba;" +
                 "user=root;" +
@@ -41,11 +43,14 @@ public partial class MainWindow : Gtk.Window
             );
 		dbConnection.Open();
 
-		IDbCommand dbCommand = dbConnection.CreateCommand();
-		dbCommand.CommandText = "select * from categoria order by 1";
-		IDataReader dataReader = dbCommand.ExecuteReader();
+		insert();
 
 		CellRendererText cellRendererText = new CellRendererText();
+
+		//insert();
+        //update();
+        //update(new Categoria(3, "categoría 3 " + DateTime.Now));
+        delete();
         
 	//	treeView.AppendColumn(
 	//		"ID",
@@ -92,14 +97,57 @@ public partial class MainWindow : Gtk.Window
 	//	ListStore listStore = new ListStore(typeof(ulong), typeof(string));
 		ListStore listStore = new ListStore(typeof(Categoria));
 		treeView.Model = listStore;
+		IDbCommand dbCommand = dbConnection.CreateCommand();
+        dbCommand.CommandText = "select * from categoria order by 1";
+        IDataReader dataReader = dbCommand.ExecuteReader();
+
 		while(dataReader.Read()){
 			listStore.AppendValues(new Categoria((ulong)dataReader["id"], (string)dataReader["nombre"]));
 		}
-	//	listStore.AppendValues("1", "categoria 1");
-	//	listStore.AppendValues("2", "categoria 2");
-
+		//	listStore.AppendValues("1", "categoria 1");
+		//	listStore.AppendValues("2", "categoria 2");
+		dataReader.Close();
 		dbConnection.Close();
         
+    }
+	private void insert()
+    {
+        IDbCommand dbCommand = dbConnection.CreateCommand();
+        dbCommand.CommandText = "insert into categoria (nombre) values ('categoría 4')";
+        int filas = dbCommand.ExecuteNonQuery();
+    }
+
+    private void update()
+    {
+        IDbCommand dbCommand = dbConnection.CreateCommand();
+        dbCommand.CommandText = "update categoria set nombre='categoría 4 modificada' where id=4";
+        dbCommand.ExecuteNonQuery();
+    }
+
+
+    private void update(Categoria categoria)
+    {
+        IDbCommand dbCommand = dbConnection.CreateCommand();
+        dbCommand.CommandText = "update categoria set nombre=@nombre where id=@id";
+
+        IDbDataParameter dbDataParameterNombre = dbCommand.CreateParameter();
+        dbDataParameterNombre.ParameterName = "nombre";
+        dbDataParameterNombre.Value = categoria.Nombre;
+        dbCommand.Parameters.Add(dbDataParameterNombre);
+
+        IDbDataParameter dbDataParameterId = dbCommand.CreateParameter();
+        dbDataParameterId.ParameterName = "id";
+        dbDataParameterId.Value = categoria.Id;
+        dbCommand.Parameters.Add(dbDataParameterId);
+
+        dbCommand.ExecuteNonQuery();
+    }
+
+    private void delete()
+    {
+        IDbCommand dbCommand = dbConnection.CreateCommand();
+        dbCommand.CommandText = "delete from categoria where id=4";
+        dbCommand.ExecuteNonQuery();
     }
 
     protected void OnDeleteEvent(object sender, DeleteEventArgs a)
