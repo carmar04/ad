@@ -3,8 +3,10 @@ using Gtk;
 using System.Data;
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
-using CCategoria;
 using System.Reflection;
+
+using CCategoria;
+using Serpis.Ad;
 
 public partial class MainWindow : Gtk.Window
 {
@@ -42,13 +44,13 @@ public partial class MainWindow : Gtk.Window
 
 		new CategoriaWindow();
 
-		dbConnection = new MySqlConnection(
-                "server=localhost;" +
-                "database=dbprueba;" +
-                "user=root;" +
-                "password=sistemas;" +
-                "ssl-mode=none;"
-            );
+		//dbConnection = new MySqlConnection(
+            //    "server=localhost;" +
+            //    "database=dbprueba;" +
+            //    "user=root;" +
+            //    "password=sistemas;" +
+            //    "ssl-mode=none;"
+            //);
 
 		App.Instance.DbConnection.Open();
         
@@ -99,7 +101,6 @@ public partial class MainWindow : Gtk.Window
 	//	} 
 	//	treeView.AppendColumn("ID", new CellRendererText(), "text", 0);
 	//	treeView.AppendColumn("Nombre", new CellRendererText(), "text", 1);
-
 	//	ListStore listStore = new ListStore(typeof(ulong), typeof(string));
 
 		ListStore listStore = new ListStore(typeof(Categoria));
@@ -115,8 +116,7 @@ public partial class MainWindow : Gtk.Window
 
 		//	listStore.AppendValues("1", "categoria 1");
 		//	listStore.AppendValues("2", "categoria 2");
-
-  
+        
 		dataReader.Close();
         
     }
@@ -134,7 +134,6 @@ public partial class MainWindow : Gtk.Window
         dbCommand.ExecuteNonQuery();
     }
 
-
     private void update(Categoria categoria)
     {
 		IDbCommand dbCommand = App.Instance.DbConnection.CreateCommand();
@@ -148,17 +147,12 @@ public partial class MainWindow : Gtk.Window
 		//dbDataParameterNombre.ParameterName = "nombre";
 		//dbDataParameterNombre.Value = categoria.Nombre;
 		//dbCommand.Parameters.Add(dbDataParameterNombre);
-
-
-
+      
         //IDbDataParameter dbDataParameterId = dbCommand.CreateParameter();
         //dbDataParameterId.ParameterName = "id";
         //dbDataParameterId.Value = categoria.Id;
         //dbCommand.Parameters.Add(dbDataParameterId);
-
-
-
-        
+           
     }
 
     private void delete()
