@@ -94,7 +94,6 @@ namespace CCategoria
 			this.DefaultWidth = 375;
 			this.DefaultHeight = 104;
 			this.Show();
-			this.buttonSave.Clicked += new global::System.EventHandler(this.OnButtonSaveClicked);
 		}
 	}
 }

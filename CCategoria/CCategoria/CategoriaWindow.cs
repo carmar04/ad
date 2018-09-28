@@ -8,20 +8,20 @@ namespace CCategoria
                 base(Gtk.WindowType.Toplevel)
         {
             this.Build();
-        }
-		protected void OnButtonSaveClicked(object sender, EventArgs e)
-		{
-			IDbCommand dbCommand = App.Instance.DbConnection.CreateCommand();
-			dbCommand.CommandText = "insert into categoria (nombre) values (@nombre)";
 
-			IDbDataParameter dbDataParameter = dbCommand.CreateParameter();
-			dbDataParameter.ParameterName = "nombre";
-			dbDataParameter.Value = entryNombre.Text;
-			dbCommand.Parameters.Add(dbDataParameter);
+			buttonSave.Clicked += delegate {
+				IDbCommand dbCommand = App.Instance.DbConnection.CreateCommand();
+                dbCommand.CommandText = "insert into categoria (nombre) values (@nombre)";
 
-			int filas = dbCommand.ExecuteNonQuery();
-            
-			Console.WriteLine("Nombre=" + entryNombre.Text);
-		}
+                IDbDataParameter dbDataParameter = dbCommand.CreateParameter();
+                dbDataParameter.ParameterName = "nombre";
+                dbDataParameter.Value = entryNombre.Text;
+                dbCommand.Parameters.Add(dbDataParameter);
+
+                int filas = dbCommand.ExecuteNonQuery();
+
+                Console.WriteLine("Nombre=" + entryNombre.Text);
+            };
+        }      
 	}
 }
