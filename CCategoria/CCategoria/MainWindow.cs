@@ -28,7 +28,7 @@ public partial class MainWindow : Gtk.Window
         }
         return fieldNamelist.ToArray();
     }
-	private IDbConnection dbConnection;
+
 
     public MainWindow() : base(Gtk.WindowType.Toplevel)
     {
@@ -54,66 +54,64 @@ public partial class MainWindow : Gtk.Window
 
 		App.Instance.DbConnection.Open();
         
-		CellRendererText cellRendererText = new CellRendererText();
+	//	CellRendererText cellRendererText = new CellRendererText();
 
-		//insert();
-        //update();
+	//	//insert();
+ //       //update();
         update(new Categoria(3, "categoría 3 " + DateTime.Now));
-		//delete();
+	//	//delete();
 
-		//	treeView.AppendColumn(
-		//		"ID",
-		//		cellRendererText,
-		//		delegate (TreeViewColumn tree_column, CellRenderer cell, TreeModel tree_model, TreeIter iter) {
-		//    Categoria categoria = (Categoria) tree_model.GetValue(iter, 0);
-		//    cellRendererText.Text = categoria.Id + "";
-		//			object model = tree_model.GetValue(iter, 0);
-		//			object value = model.GetType().GetProperty("Id").GetValue(model);
-		//			cellRendererText.Text = value + "";
-		//		}
-		//	);
+		TreeViewHelper.Fill(treeView, new string[] { "Id", "Nombre" }, CategoriaDao.Categorias);
 
-		//TreeViewHelper.Fill(treeView, CategoriaDao.List);
+	//	//	treeView.AppendColumn(
+	//	//		"ID",
+	//	//		cellRendererText,
+	//	//		delegate (TreeViewColumn tree_column, CellRenderer cell, TreeModel tree_model, TreeIter iter) {
+	//	//    Categoria categoria = (Categoria) tree_model.GetValue(iter, 0);
+	//	//    cellRendererText.Text = categoria.Id + "";
+	//	//			object model = tree_model.GetValue(iter, 0);
+	//	//			object value = model.GetType().GetProperty("Id").GetValue(model);
+	//	//			cellRendererText.Text = value + "";
+	//	//		}
+	//	//	);
+
+	//	//TreeViewHelper.Fill(treeView, CategoriaDao.List);
               
-		string[] properties = new string[] { "Id", "Nombre" };
-		foreach (string property in properties) {
+	//	string[] properties = new string[] { "Id", "Nombre" };
+	//	foreach (string property in properties) {
 			
-			string propertyName = property;
-			treeView.AppendColumn (
+	//		string propertyName = property;
+	//		treeView.AppendColumn (
 				
-                property,
-                cellRendererText,
-                delegate (
+ //               property,
+ //               cellRendererText,
+ //               delegate (
 					
-					  TreeViewColumn tree_column,
-				      CellRenderer cell,
-				      TreeModel tree_model,
-				      TreeIter iter) {
-                //   Categoria categoria = (Categoria) tree_model.GetValue(iter, 0);
-                //   cellRendererText.Text = categoria.Nombre + "";
-                object model = tree_model.GetValue(iter, 0);
-				object value = model.GetType().GetProperty(property).GetValue(model);
-                cellRendererText.Text = value + "";
-                }
-            );
-		}
+	//				  TreeViewColumn tree_column,
+	//			      CellRenderer cell,
+	//			      TreeModel tree_model,
+	//			      TreeIter iter) {
+ //               //   Categoria categoria = (Categoria) tree_model.GetValue(iter, 0);
+ //               //   cellRendererText.Text = categoria.Nombre + "";
+ //               object model = tree_model.GetValue(iter, 0);
+	//			object value = model.GetType().GetProperty(property).GetValue(model);
+ //               cellRendererText.Text = value + "";
+ //               }
+ //           );
+	//	}
 		                                
-	//	for (int index = 0; index < dataReader.FieldCount;index++){
-	//		treeView.AppendColumn(getFieldNames(dataReader)[index], new CellRendererText(), "text", index);
-	//	} 
-	//	treeView.AppendColumn("ID", new CellRendererText(), "text", 0);
-	//	treeView.AppendColumn("Nombre", new CellRendererText(), "text", 1);
-	//	ListStore listStore = new ListStore(typeof(ulong), typeof(string));
+	////	for (int index = 0; index < dataReader.FieldCount;index++){
+	////		treeView.AppendColumn(getFieldNames(dataReader)[index], new CellRendererText(), "text", index);
+	////	} 
+	////	treeView.AppendColumn("ID", new CellRendererText(), "text", 0);
+	////	treeView.AppendColumn("Nombre", new CellRendererText(), "text", 1);
+	////	ListStore listStore = new ListStore(typeof(ulong), typeof(string));
 
-		ListStore listStore = new ListStore(typeof(Categoria));
-        treeView.Model = listStore;
-		foreach (Categoria categoria in CategoriaDao.Categorias){
-			listStore.AppendValues(categoria);
-		}
-
-
-
-
+		//ListStore listStore = new ListStore(typeof(Categoria));
+  //      treeView.Model = listStore;
+		//foreach (Categoria categoria in CategoriaDao.Categorias){
+		//	listStore.AppendValues(categoria);
+		//}      
 
 		//IDbCommand dbCommand = App.Instance.DbConnection.CreateCommand();
   //      dbCommand.CommandText = "select * from categoria order by 1";
@@ -126,7 +124,6 @@ public partial class MainWindow : Gtk.Window
 		//	listStore.AppendValues("1", "categoria 1");
 		//	listStore.AppendValues("2", "categoria 2");
         
-		dataReader.Close();
         
     }
 	private void insert()
