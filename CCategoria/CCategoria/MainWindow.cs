@@ -41,20 +41,8 @@ public partial class MainWindow : Gtk.Window
                 "password=sistemas;" +
                 "ssl-mode=none;"
             );
-
-		new CategoriaWindow();
-
-		//dbConnection = new MySqlConnection(
-            //    "server=localhost;" +
-            //    "database=dbprueba;" +
-            //    "user=root;" +
-            //    "password=sistemas;" +
-            //    "ssl-mode=none;"
-            //);
-
+      
 		App.Instance.DbConnection.Open();
-        
-	//	CellRendererText cellRendererText = new CellRendererText();
 
 	//	//insert();
  //       //update();
@@ -63,69 +51,37 @@ public partial class MainWindow : Gtk.Window
 
 		TreeViewHelper.Fill(treeView, new string[] { "Id", "Nombre" }, CategoriaDao.Categorias);
 
-	//	//	treeView.AppendColumn(
-	//	//		"ID",
-	//	//		cellRendererText,
-	//	//		delegate (TreeViewColumn tree_column, CellRenderer cell, TreeModel tree_model, TreeIter iter) {
-	//	//    Categoria categoria = (Categoria) tree_model.GetValue(iter, 0);
-	//	//    cellRendererText.Text = categoria.Id + "";
-	//	//			object model = tree_model.GetValue(iter, 0);
-	//	//			object value = model.GetType().GetProperty("Id").GetValue(model);
-	//	//			cellRendererText.Text = value + "";
-	//	//		}
-	//	//	);
+		newAction.Activated += delegate {
+			new CategoriaWindow();
+		};
 
-	//	//TreeViewHelper.Fill(treeView, CategoriaDao.List);
-              
-	//	string[] properties = new string[] { "Id", "Nombre" };
-	//	foreach (string property in properties) {
-			
-	//		string propertyName = property;
-	//		treeView.AppendColumn (
-				
- //               property,
- //               cellRendererText,
- //               delegate (
-					
-	//				  TreeViewColumn tree_column,
-	//			      CellRenderer cell,
-	//			      TreeModel tree_model,
-	//			      TreeIter iter) {
- //               //   Categoria categoria = (Categoria) tree_model.GetValue(iter, 0);
- //               //   cellRendererText.Text = categoria.Nombre + "";
- //               object model = tree_model.GetValue(iter, 0);
-	//			object value = model.GetType().GetProperty(property).GetValue(model);
- //               cellRendererText.Text = value + "";
- //               }
- //           );
-	//	}
-		                                
-	////	for (int index = 0; index < dataReader.FieldCount;index++){
-	////		treeView.AppendColumn(getFieldNames(dataReader)[index], new CellRendererText(), "text", index);
-	////	} 
-	////	treeView.AppendColumn("ID", new CellRendererText(), "text", 0);
-	////	treeView.AppendColumn("Nombre", new CellRendererText(), "text", 1);
-	////	ListStore listStore = new ListStore(typeof(ulong), typeof(string));
+		editAction.Activated += delegate {
+			Console.WriteLine("Id = " + GetId(treeView));
+		};
 
-		//ListStore listStore = new ListStore(typeof(Categoria));
-  //      treeView.Model = listStore;
-		//foreach (Categoria categoria in CategoriaDao.Categorias){
-		//	listStore.AppendValues(categoria);
-		//}      
+		treeView.Selection.Changed += delegate {
+		
+			refreshUI();
+		};
 
-		//IDbCommand dbCommand = App.Instance.DbConnection.CreateCommand();
-  //      dbCommand.CommandText = "select * from categoria order by 1";
-  //      IDataReader dataReader = dbCommand.ExecuteReader();
+		refreshUI();
 
-		//while(dataReader.Read()){
-		//	listStore.AppendValues(new Categoria((ulong)dataReader["id"], (string)dataReader["nombre"]));
-		//}
-
-		//	listStore.AppendValues("1", "categoria 1");
-		//	listStore.AppendValues("2", "categoria 2");
-        
-        
     }
+	public static object GetId(TreeView treeView){
+		return Get(treeView,"Id");
+	}
+	public static object Get(TreeView treeView, string propertyName){ //devolver modelos genericos
+		if (treeView.Selection.GetSelected(out TreeIter treeIter))
+			return null;
+        object model = treeView.Model.GetValue(treeIter, 0);
+		return model.GetType().GetProperty(propertyName).GetValue(model);
+
+	}
+	private void refreshUI(){
+		bool treeViewSelected = treeView.Selection.CountSelectedRows() > 0;
+		editAction.Sensitive = treeViewSelected;
+		deleteAction.Sensitive = treeViewSelected;
+	}
 	private void insert()
     {
 		IDbCommand dbCommand = App.Instance.DbConnection.CreateCommand();
