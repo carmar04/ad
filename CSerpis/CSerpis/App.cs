@@ -10,8 +10,12 @@ namespace Serpis.Ad
 
 		private static App instance = new App(); //solo se crea una instancia del objeto = singleton
 
-		public static App Instance { //con mayusculas debido a que es public "Instance"
-			get { return instance; }
+		public static App Instance { //Inicialización perezosa
+			get {
+				if (instance == null){
+					instance = new App();
+				}
+                return instance; }
 		}
 
 		private IDbConnection dbConnection;

@@ -21,5 +21,27 @@ namespace CCategoria
 				return categorias;
 			}
 		}
+		private static string selectSql = "select id, nombre from categoria where id = @id";
+		public static Categoria Load(object id){
+			IDbCommand dbCommand = App.Instance.DbConnection.CreateCommand();
+			dbCommand.CommandText = selectSql;
+			DbCommandHelper.AddParameter(dbCommand, "id", id);
+			IDataReader dataReader = dbCommand.ExecuteReader();
+			dataReader.Read();
+            Categoria categoria = new Categoria((ulong)id, (string)dataReader["nombre"]);
+			dataReader.Close();
+			return categoria;
+
+		}
+		private static string insertSql = "insert into categoria (nombre) values (@nombre)";
+		public static void Save(Categoria categoria){
+			insert(categoria);
+		}
+		private static void insert(Categoria categoria){
+			IDbCommand dbCommand = App.Instance.DbConnection.CreateCommand();
+			dbCommand.CommandText = insertSql;
+			DbCommandHelper.AddParameter(dbCommand, "nombre", categoria.Nombre);
+			dbCommand.ExecuteNonQuery();
+		}
     }
 }

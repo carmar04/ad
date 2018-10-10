@@ -24,10 +24,7 @@ namespace Serpis.Ad
 
             ListStore listStore = new ListStore(typeof(object));
             treeView.Model = listStore;
-            //foreach (Categoria categoria in CategoriaDao.Categorias)
-            //{
-            //    listStore.AppendValues(categoria);
-            //}
+
 			foreach(object obj in enumerable)
 				listStore.AppendValues(obj);
 		}

@@ -52,11 +52,14 @@ public partial class MainWindow : Gtk.Window
 		TreeViewHelper.Fill(treeView, new string[] { "Id", "Nombre" }, CategoriaDao.Categorias);
 
 		newAction.Activated += delegate {
-			new CategoriaWindow();
+			new CategoriaWindow(new Categoria());
 		};
-
+        
 		editAction.Activated += delegate {
-			Console.WriteLine("Id = " + GetId(treeView));
+			object id = GetId(treeView);
+			Console.WriteLine("Id = " + id);
+			Categoria categoria = CategoriaDao.Load(id);
+			new CategoriaWindow(categoria);
 		};
 
 		treeView.Selection.Changed += delegate {
@@ -68,20 +71,21 @@ public partial class MainWindow : Gtk.Window
 
     }
 	public static object GetId(TreeView treeView){
-		return Get(treeView,"Id");
+		return Get(treeView, "Id");
 	}
 	public static object Get(TreeView treeView, string propertyName){ //devolver modelos genericos
 		if (treeView.Selection.GetSelected(out TreeIter treeIter))
 			return null;
         object model = treeView.Model.GetValue(treeIter, 0);
 		return model.GetType().GetProperty(propertyName).GetValue(model);
-
 	}
+
 	private void refreshUI(){
 		bool treeViewSelected = treeView.Selection.CountSelectedRows() > 0;
 		editAction.Sensitive = treeViewSelected;
 		deleteAction.Sensitive = treeViewSelected;
 	}
+
 	private void insert()
     {
 		IDbCommand dbCommand = App.Instance.DbConnection.CreateCommand();
