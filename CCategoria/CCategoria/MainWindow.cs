@@ -7,9 +7,12 @@ using System.Reflection;
 
 using CCategoria;
 using Serpis.Ad;
+using Serpis.Ad.Ventas;
+
 
 public partial class MainWindow : Gtk.Window
 {
+	
 	private static string[] getFieldNames(IDataReader dataReader)
     {
 
@@ -28,27 +31,13 @@ public partial class MainWindow : Gtk.Window
         }
         return fieldNamelist.ToArray();
     }
-
-
+    
     public MainWindow() : base(Gtk.WindowType.Toplevel)
     {
         Build();
 
-		App.Instance.DbConnection = new MySqlConnection(
-                "server=localhost;" +
-                "database=dbprueba;" +
-                "user=root;" +
-                "password=sistemas;" +
-                "ssl-mode=none;"
-            );
+		Title = "Categoria";
       
-		App.Instance.DbConnection.Open();
-
-	//	//insert();
- //       //update();
-        update(new Categoria(3, "categoría 3 " + DateTime.Now));
-	//	//delete();
-
 		TreeViewHelper.Fill(treeView, new string[] { "Id", "Nombre" }, CategoriaDao.Categorias);
 
 		newAction.Activated += delegate {
@@ -56,11 +45,22 @@ public partial class MainWindow : Gtk.Window
 		};
         
 		editAction.Activated += delegate {
-			object id = GetId(treeView);
+			object id = TreeViewHelper.GetId(treeView);
 			Console.WriteLine("Id = " + id);
 			Categoria categoria = CategoriaDao.Load(id);
 			new CategoriaWindow(categoria);
 		};
+		refreshAction.Activated += delegate {
+            TreeViewHelper.Fill(treeView, new string[] { "Id", "Nombre" }, CategoriaDao.Categorias);
+        };
+		deleteAction.Activated += delegate {
+			if(WindowHelper.Confirm(this, "Quieres eliminar el registro?")){
+				object id = TreeViewHelper.GetId(treeView);
+				CategoriaDao.Delete(id);
+			}
+		};
+
+
 
 		treeView.Selection.Changed += delegate {
 		
@@ -70,16 +70,6 @@ public partial class MainWindow : Gtk.Window
 		refreshUI();
 
     }
-	public static object GetId(TreeView treeView){
-		return Get(treeView, "Id");
-	}
-	public static object Get(TreeView treeView, string propertyName){ //devolver modelos genericos
-		if (treeView.Selection.GetSelected(out TreeIter treeIter))
-			return null;
-        object model = treeView.Model.GetValue(treeIter, 0);
-		return model.GetType().GetProperty(propertyName).GetValue(model);
-	}
-
 	private void refreshUI(){
 		bool treeViewSelected = treeView.Selection.CountSelectedRows() > 0;
 		editAction.Sensitive = treeViewSelected;
