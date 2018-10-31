@@ -1,5 +1,11 @@
+<<<<<<< HEAD
 ﻿using System.Collections.Generic;
 using System.Collections;
+=======
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+>>>>>>> entitydao
 using System.Data;
 using System.Reflection;
 namespace Serpis.Ad
@@ -22,6 +28,7 @@ namespace Serpis.Ad
         }
 
         public IEnumerable Enumerable
+<<<<<<< HEAD
         {
             get
             {
@@ -52,3 +59,45 @@ namespace Serpis.Ad
     }
 
 }
+=======
+		{
+			get
+			{
+				ArrayList list = new ArrayList();
+				IDbCommand dbCommand = App.Instance.DbConnection.CreateCommand();
+				string tableName = entityType.Name.ToLower();
+				string fieldNameCsv = string.Join(",", entityPropertyNames).ToLower();
+				string selectSql = string.Format("select {0} from {1} order by {2}", fieldNameCsv, tableName, idPropertyName.ToLower());
+				entityType.GetProperties();
+				dbCommand.CommandText = selectSql;
+				IDataReader dataReader = dbCommand.ExecuteReader();
+				while (dataReader.Read())
+				{
+					object model = Activator.CreateInstance<TEntity>();
+					foreach (string propertyName in entityPropertyNames)
+					{
+						object value = dataReader[propertyName.ToLower()];
+						entityType.GetProperty(propertyName).SetValue(model, value);
+					}
+					list.Add(model);
+				}
+				dataReader.Close();
+				return list;
+			}
+
+		}
+		public TEntity Load(object id){
+			return null;
+		}
+		public void Save(TEntity entity){
+			object id = entityType.GetProperty(idPropertyName).GetValue(entity);
+			
+		}
+		public void Delete(object id){
+			
+		}
+
+    }
+
+}
+>>>>>>> entitydao

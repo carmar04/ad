@@ -2,6 +2,7 @@
 using System.Data;
 using System.Collections.Generic;
 using Serpis.Ad;
+using System.Collections;
 namespace Serpis.Ad.Ventas
 {
     public class CategoriaDao

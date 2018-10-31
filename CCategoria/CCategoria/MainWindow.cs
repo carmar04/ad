@@ -9,36 +9,22 @@ using CCategoria;
 using Serpis.Ad;
 using Serpis.Ad.Ventas;
 
+public class EntityDaoCategoria : EntityDao<Categoria> {
+	
+}
+
 
 public partial class MainWindow : Gtk.Window
 {
 	
-	private static string[] getFieldNames(IDataReader dataReader)
-    {
-
-        //int fieldCount = dataReader.FieldCount;
-        //string [] fieldNames = new string[fieldCount];
-        //for (int index = 0; index < fieldCount; index++)
-        //{
-        //fieldNames.SetValue(dataReader.GetName(index), index);
-        //}
-        //return fieldNames;
-        List<string> fieldNamelist = new List<string>();
-        int fieldCount = dataReader.FieldCount;
-        for (int index = 0; index < dataReader.FieldCount; index++)
-        {
-            fieldNamelist.Add(dataReader.GetName(index));
-        }
-        return fieldNamelist.ToArray();
-    }
-    
     public MainWindow() : base(Gtk.WindowType.Toplevel)
     {
         Build();
 
 		Title = "Categoria";
-      
-		TreeViewHelper.Fill(treeView, new string[] { "Id", "Nombre" }, CategoriaDao.Categorias);
+		EntityDaoCategoria entityDaoCategoria = new EntityDaoCategoria();
+		//TreeViewHelper.Fill(treeView, new string[] { "Id", "Nombre" }, CategoriaDao.Categorias);
+		TreeViewHelper.Fill(treeView, new string[] { "Id", "Nombre" }, entityDaoCategoria.Enumerable);
 
 		newAction.Activated += delegate {
 			new CategoriaWindow(new Categoria());
