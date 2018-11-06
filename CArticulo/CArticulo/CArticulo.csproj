@@ -3,10 +3,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProjectGuid>{BE5C71D8-DD51-406D-ABB0-CCA7321E2CDF}</ProjectGuid>
+    <ProjectGuid>{A03DE634-053C-4CCB-8E1C-E4B9C82E2434}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>CArticulos</RootNamespace>
-    <AssemblyName>CArticulos</AssemblyName>
+    <RootNamespace>CArticulo</RootNamespace>
+    <AssemblyName>CArticulo</AssemblyName>
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -68,9 +68,6 @@
     <Reference Include="CVentas">
       <HintPath>..\..\CVentas\CVentas\bin\Debug\CVentas.dll</HintPath>
     </Reference>
-    <Reference Include="CVentas">
-      <HintPath>..\..\CVentas\CVentas\bin\Debug\CVentas.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="gtk-gui\gui.stetic">
@@ -83,9 +80,9 @@
     <Compile Include="gtk-gui\MainWindow.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="CArticulo.cs" />
+    <Compile Include="Articulo.cs" />
     <Compile Include="ArticuloWindow.cs" />
-    <Compile Include="gtk-gui\CArticulos.ArticuloWindow.cs" />
+    <Compile Include="gtk-gui\CArticulo.ArticuloWindow.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
