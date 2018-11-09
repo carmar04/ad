@@ -30,7 +30,10 @@ namespace Serpis.Ad
                 IDbCommand dbCommand = App.Instance.DbConnection.CreateCommand();
                 string tableName = entityType.Name.ToLower();
                 string fieldNameCsv = string.Join(",", entityPropertyNames).ToLower();
-                string selectSql = string.Format("select {0} from {1} order by {2}", fieldNameCsv, tableName, idPropertyName.ToLower());
+                string selectSql = string.Format(
+					"select {0} from {1} order by {2}", 
+					fieldNameCsv, tableName, idPropertyName.ToLower()
+				);
                 entityType.GetProperties();
                 dbCommand.CommandText = selectSql;
                 IDataReader dataReader = dbCommand.ExecuteReader();
