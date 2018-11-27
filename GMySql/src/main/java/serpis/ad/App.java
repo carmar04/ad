@@ -11,7 +11,6 @@ public class App {
 	public static App getInstance() {
 		return instance;
 	}
-	
 	private Connection connection;
 	
 	public void setConnection(Connection connection) {

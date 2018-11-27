@@ -19,7 +19,6 @@ public class Prueba {
 						
  		App.getInstance().getConnection();
 		
-		//Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/dbprueba?user=root&password=sistemas");
 		Statement statement = App.getInstance().getConnection().createStatement();
 		insert();
 		ResultSet resultSet = statement.executeQuery("select * from categoria");
@@ -39,6 +38,8 @@ public class Prueba {
 		preparedStatement.close();
 	}
 	private static void update() throws SQLException {
-		String updateSql = "update categoria set (nombre)"
+		String updateSql = "update categoria set (nombre) where id=?";
+		PreparedStatement preparedStatement = App.getInstance().getConnection().prepareStatement(updateSql);
+		preparedStatement.setObject(1, "categoria");
 	}
 }
