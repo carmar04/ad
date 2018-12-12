@@ -29,15 +29,4 @@ public class ScannerHelper {
 			}
 		}
 	}
-	public static String getString(String label) {
-		while(true) {
-			System.out.println(label);
-			String labelString = scanner.nextLine();
-			try {
-				return new String(labelString);
-			}catch(NumberFormatException ex) {
-				System.out.println("Formato inválido. Vuelve a introducir.");
-			}
-		}
-	}
 }

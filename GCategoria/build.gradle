@@ -28,5 +28,8 @@ dependencies {
     
     // https://mvnrepository.com/artifact/mysql/mysql-connector-java
 	compile 'mysql:mysql-connector-java:8.0.13'
+	
+	implementation files('../GSerpisConsole/build/libs/GSerpisConsole.jar')
+	
 }
 
