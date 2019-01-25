@@ -12,6 +12,8 @@ public class Categoria {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	
 	Long id;
+	String nombre;
+	
 	public Long getId() {
 		return id;
 	}
@@ -24,6 +26,9 @@ public class Categoria {
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
-	String nombre;
-	
+	@Override
+	public String toString() {
+		return String.format("[%s] -s", id, nombre);
+	}
+
 }
