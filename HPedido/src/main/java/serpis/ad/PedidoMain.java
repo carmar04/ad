@@ -3,6 +3,7 @@ package serpis.ad;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.function.Consumer;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -35,6 +36,13 @@ public class PedidoMain {
 		
 		Articulo articulo = articuloNuevo();
 		eliminarArticulo(articulo);
+		
+		actualizarCategoria();
+		doInJpa(entityManagerFactory, entityManager2 -> {
+			Articulo articulo2 = entityManager.getReference(Articulo.class, articulo.getId());
+			entityManager.remove(articulo2);
+		});
+		
 	}
 	public static void show(Articulo articulo) {
 		System.out.printf("%4s %-30s %-30s %s %n",articulo.getId(), articulo.getNombre(), articulo.getCategoria(), articulo.getPrecio());
@@ -70,6 +78,32 @@ public class PedidoMain {
 		articulo = entityManager.find(Articulo.class, articulo.getId());
 		entityManager.remove(articulo);
 		
+		entityManager.getTransaction().commit();
+		entityManager.close();
+		
+		entityManagerFactory.close();
+		
+	}
+	
+	public static void doInJpa(EntityManagerFactory entityManagerFactory, Consumer<EntityManager> consumer) {
+		EntityManager entityManager = entityManagerFactory.createEntityManager();
+		entityManager.getTransaction().begin();
+		consumer.accept(entityManager);
+		
+		entityManager.getTransaction().commit();
+		entityManager.close();
+	}
+	
+	public static void actualizarCategoria() {
+		EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("serpis.ad.hmysql");
+		EntityManager entityManager = entityManagerFactory.createEntityManager();
+		entityManager.getTransaction().begin();
+		
+		Articulo articulo = new Articulo();
+		articulo.setId((long) 1);
+		articulo = entityManager.find(Articulo.class, articulo.getId());
+		
+		articulo.setId((long) 23);
 		entityManager.getTransaction().commit();
 		entityManager.close();
 		
