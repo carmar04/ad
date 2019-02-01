@@ -4,24 +4,34 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 import org.hibernate.Hibernate;
+import org.hibernate.cfg.JPAIndexHolder;
+
+import serpis.ad.*;
 
 import com.mysql.cj.Session;
 
 public class PedidoMain {
+
 	public static void main (String [] args) {
-		EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("serpis.ad.hmysql");
 		
-		EntityManager entityManager = entityManagerFactory.createEntityManager();
+		App.getInstance().setEntityManagerFactory(Persistence.createEntityManagerFactory("serpis.ad.hmysql"));
+		
+		EntityManager entityManager = App.getInstance().getEntityManagerFactory().createEntityManager();
+		
+		//EntityManager entityManager = entityManagerFactory.createEntityManager();
 		entityManager.getTransaction().begin();
 		
-		//Articulo articulo = entityManager.find(Articulo.class, 1L);
-		//show(articulo);
+		Articulo articulo = entityManager.find(Articulo.class, 1L);
+		show(articulo);
+		System.out.println("Articulo id: " + articulo.getId());
+		System.out.println("Arituclo nombre: " + articulo.getNombre());
 		
 		List<Categoria> categorias = entityManager.createQuery("from Categoria", Categoria.class).getResultList();
 		
@@ -30,18 +40,25 @@ public class PedidoMain {
 		}
 
 		entityManager.getTransaction().commit();
-		entityManager.close();
 		
-		entityManagerFactory.close();
 		
-		Articulo articulo = articuloNuevo();
-		eliminarArticulo(articulo);
+		Articulo articulo2 = articuloNuevo();
+		eliminarArticulo(articulo2);
 		
-		actualizarCategoria();
-		doInJpa(entityManagerFactory, entityManager2 -> {
-			Articulo articulo2 = entityManager.getReference(Articulo.class, articulo.getId());
+		//actualizarCategoria();
+		JpaHelper.doInJPA(App.getInstance().getEntityManagerFactory(), entityManager3 -> {
+			Articulo articulo3 = entityManager.getReference(Articulo.class, articulo.getId());
 			entityManager.remove(articulo2);
 		});
+		
+		
+		
+		
+		Articulo articulo3 = JpaHelper.doInJPA(App.getInstance().getEntityManagerFactory(), entityManager2 -> {
+			return entityManager2.find(Articulo.class, 1L);
+		});
+		show(articulo3);
+		//entityManagerFactory.close();
 		
 	}
 	public static void show(Articulo articulo) {
@@ -49,11 +66,9 @@ public class PedidoMain {
 	}
 	
 	public static Articulo articuloNuevo() {
-		EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("serpis.ad.hmysql");
 		
-		EntityManager entityManager = entityManagerFactory.createEntityManager();
+		EntityManager entityManager = App.getInstance().getEntityManagerFactory().createEntityManager();
 		entityManager.getTransaction().begin();
-		
 		
 		Articulo articulo = new Articulo();
 		articulo.setNombre("Articulo prueba" + LocalDateTime.now());
@@ -64,15 +79,12 @@ public class PedidoMain {
 		entityManager.getTransaction().commit();
 		entityManager.close();
 		
-		entityManagerFactory.close();
-		
 		return articulo;
 
 	}
 	public static void eliminarArticulo(Articulo articulo) {
-		EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("serpis.ad.hmysql");
 		
-		EntityManager entityManager = entityManagerFactory.createEntityManager();
+		EntityManager entityManager = App.getInstance().getEntityManagerFactory().createEntityManager();
 		entityManager.getTransaction().begin();
 		
 		articulo = entityManager.find(Articulo.class, articulo.getId());
@@ -81,22 +93,11 @@ public class PedidoMain {
 		entityManager.getTransaction().commit();
 		entityManager.close();
 		
-		entityManagerFactory.close();
-		
 	}
 	
-	public static void doInJpa(EntityManagerFactory entityManagerFactory, Consumer<EntityManager> consumer) {
-		EntityManager entityManager = entityManagerFactory.createEntityManager();
-		entityManager.getTransaction().begin();
-		consumer.accept(entityManager);
-		
-		entityManager.getTransaction().commit();
-		entityManager.close();
-	}
 	
 	public static void actualizarCategoria() {
-		EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("serpis.ad.hmysql");
-		EntityManager entityManager = entityManagerFactory.createEntityManager();
+		EntityManager entityManager = App.getInstance().getEntityManagerFactory().createEntityManager();
 		entityManager.getTransaction().begin();
 		
 		Articulo articulo = new Articulo();
@@ -106,8 +107,6 @@ public class PedidoMain {
 		articulo.setId((long) 23);
 		entityManager.getTransaction().commit();
 		entityManager.close();
-		
-		entityManagerFactory.close();
-		
+
 	}
 }
