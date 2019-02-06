@@ -51,8 +51,9 @@ public class PedidoMain {
 			entityManager.remove(articulo2);
 		});
 		
-		
-		
+		JpaHelper.execute(entityManager4 -> {
+			entityManager4.find(Articulo.class, 1L);
+		});
 		
 		Articulo articulo3 = JpaHelper.doInJPA(App.getInstance().getEntityManagerFactory(), entityManager2 -> {
 			return entityManager2.find(Articulo.class, 1L);
@@ -87,7 +88,8 @@ public class PedidoMain {
 		EntityManager entityManager = App.getInstance().getEntityManagerFactory().createEntityManager();
 		entityManager.getTransaction().begin();
 		
-		articulo = entityManager.find(Articulo.class, articulo.getId());
+		articulo.setCategoria(entityManager.getReference(Categoria.class, 2L));
+		//articulo = entityManager.find(Articulo.class, articulo.getId());
 		entityManager.remove(articulo);
 		
 		entityManager.getTransaction().commit();

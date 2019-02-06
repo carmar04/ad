@@ -7,7 +7,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
 public class JpaHelper {
-    
+	
+	
+    public static void execute(Consumer<EntityManager> consumer) {
+    	doInJPA(App.getInstance().getEntityManagerFactory(), consumer);
+    }
     
     public static void doInJPA(EntityManagerFactory entityManagerFactory, Consumer<EntityManager>consumer) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
