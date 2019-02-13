@@ -36,3 +36,43 @@ insert into categoria (nombre) values ('categoria 3');
  #skip-name-resolve=1
  Host 127.0.0.1 no tiene permiso para conectarse a la base de datos
  Para arreglar esto incluimos ssl-mode=none en la conection string
+
+20190208
+
+T1
+	select * from articulo
+		where id = 1
+	update articulo
+		set nombre='kkita', precio=33, categoria=1
+		where id = 1;
+
+T2
+	update articulo
+		set nombre='articulo1', precio=33, categoria=1 
+		where id = 1;
+
+T3
+	update articulo
+		set nombre='articulo1', precio=1, categoria=2
+		where id = 1;
+
+T4
+	update articulo
+		set nombre = 'no se como', precio=77, categoria=4
+		where id = 1;
+
+T5
+	update articulo
+		set nombre='no se como', precio=77, categoria=4
+		where id = 1 and nombre='articulo1' and precio=1 and categoria=1;
+
+T0
+	update articulo
+		set nombre='no se como', precio=77, categoria=4, version=version + 1
+		where id = 1 and version=1;
+
+#Modificamos todos los valores en el update aunque realmente solo
+hayamos modificado un campo de la tabla.
+
+
+

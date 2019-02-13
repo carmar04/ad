@@ -13,6 +13,10 @@ public class JpaHelper {
     	doInJPA(App.getInstance().getEntityManagerFactory(), consumer);
     }
     
+    public static <R> R execute(Function<EntityManager, R> function ) {
+    	return doInJPA(App.getInstance().getEntityManagerFactory(), function);
+    }
+    
     public static void doInJPA(EntityManagerFactory entityManagerFactory, Consumer<EntityManager>consumer) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
@@ -31,6 +35,4 @@ public class JpaHelper {
         return result;
         
     }
-
-
 }

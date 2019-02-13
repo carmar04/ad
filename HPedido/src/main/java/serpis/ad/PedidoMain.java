@@ -2,6 +2,7 @@ package serpis.ad;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -42,17 +43,21 @@ public class PedidoMain {
 		entityManager.getTransaction().commit();
 		
 		
-		Articulo articulo2 = articuloNuevo();
-		eliminarArticulo(articulo2);
+//		Articulo articulo2 = articuloNuevo();
+//		eliminarArticulo(articulo2);
 		
 		//actualizarCategoria();
-		JpaHelper.doInJPA(App.getInstance().getEntityManagerFactory(), entityManager3 -> {
-			Articulo articulo3 = entityManager.getReference(Articulo.class, articulo.getId());
-			entityManager.remove(articulo2);
+//		JpaHelper.doInJPA(App.getInstance().getEntityManagerFactory(), entityManager3 -> {
+//			Articulo articulo3 = entityManager.getReference(Articulo.class, articulo.getId());
+//			entityManager.remove(articulo2);
+//		});
+		JpaHelper.execute(entityManager7 -> {
+			entityManager7.find(Articulo.class, 1L);
 		});
 		
-		JpaHelper.execute(entityManager4 -> {
-			entityManager4.find(Articulo.class, 1L);
+		Articulo articulo4 = JpaHelper.execute(entityManager8.remove(Articulo.class, 1L) -> {
+			return doInJpa()
+
 		});
 		
 		Articulo articulo3 = JpaHelper.doInJPA(App.getInstance().getEntityManagerFactory(), entityManager2 -> {
@@ -66,49 +71,70 @@ public class PedidoMain {
 		System.out.printf("%4s %-30s %-30s %s %n",articulo.getId(), articulo.getNombre(), articulo.getCategoria(), articulo.getPrecio());
 	}
 	
-	public static Articulo articuloNuevo() {
-		
-		EntityManager entityManager = App.getInstance().getEntityManagerFactory().createEntityManager();
-		entityManager.getTransaction().begin();
-		
-		Articulo articulo = new Articulo();
-		articulo.setNombre("Articulo prueba" + LocalDateTime.now());
-		articulo.setPrecio(BigDecimal.valueOf(1));
-		articulo.setCategoria(entityManager.getReference(Categoria.class, 2L));
-		entityManager.persist(articulo);
-		
-		entityManager.getTransaction().commit();
-		entityManager.close();
-		
-		return articulo;
-
-	}
-	public static void eliminarArticulo(Articulo articulo) {
-		
-		EntityManager entityManager = App.getInstance().getEntityManagerFactory().createEntityManager();
-		entityManager.getTransaction().begin();
-		
-		articulo.setCategoria(entityManager.getReference(Categoria.class, 2L));
-		//articulo = entityManager.find(Articulo.class, articulo.getId());
-		entityManager.remove(articulo);
-		
-		entityManager.getTransaction().commit();
-		entityManager.close();
-		
-	}
+//	public static Articulo articuloNuevo() {
+//		
+//		EntityManager entityManager = App.getInstance().getEntityManagerFactory().createEntityManager();
+//		entityManager.getTransaction().begin();
+//		
+//		Articulo articulo = new Articulo();
+//		articulo.setNombre("Articulo prueba" + LocalDateTime.now());
+//		articulo.setPrecio(BigDecimal.valueOf(1));
+//		articulo.setCategoria(entityManager.getReference(Categoria.class, 2L));
+//		entityManager.persist(articulo);
+//		
+//		entityManager.getTransaction().commit();
+//		entityManager.close();
+//		
+//		return articulo;
+//
+//	}
+//	public static void eliminarArticulo(Articulo articulo) {
+//		
+//		EntityManager entityManager = App.getInstance().getEntityManagerFactory().createEntityManager();
+//		entityManager.getTransaction().begin();
+//		
+//		articulo.setCategoria(entityManager.getReference(Categoria.class, 2L));
+//		//articulo = entityManager.find(Articulo.class, articulo.getId());
+//		entityManager.remove(articulo);
+//		
+//		entityManager.getTransaction().commit();
+//		entityManager.close();
+//		
+//	}
 	
 	
-	public static void actualizarCategoria() {
-		EntityManager entityManager = App.getInstance().getEntityManagerFactory().createEntityManager();
-		entityManager.getTransaction().begin();
-		
-		Articulo articulo = new Articulo();
-		articulo.setId((long) 1);
-		articulo = entityManager.find(Articulo.class, articulo.getId());
-		
-		articulo.setId((long) 23);
-		entityManager.getTransaction().commit();
-		entityManager.close();
+//	public static void actualizarCategoria() {
+//		EntityManager entityManager = App.getInstance().getEntityManagerFactory().createEntityManager();
+//		entityManager.getTransaction().begin();
+//		
+//		Articulo articulo = new Articulo();
+//		articulo.setId((long) 1);
+//		articulo = entityManager.find(Articulo.class, articulo.getId());
+//		
+//		articulo.setId((long) 23);
+//		entityManager.getTransaction().commit();
+//		entityManager.close();
+//
+//	}
 
+	public static void tryCatchFinally() {
+		Object item = null;
+//		EntityManager entityManager = App.getInstance().getEntityManagerFactory().createEntityManager();
+//		entityManager.getTransaction().begin();
+		EntityManager entityManager = null;
+		try {
+			entityManager = App.getInstance().getEntityManagerFactory().createEntityManager();
+			entityManager.getTransaction().begin();
+			entityManager.persist(item);
+			//assertTrue(entityManager.contains(item));
+			entityManager.getTransaction().commit();
+		} catch (Exception e) {
+			if (entityManager.getTransaction() != null && entityManager.getTransaction().isActive()) {
+				entityManager.getTransaction().rollback();
+			}
+			throw e;
+		} finally {
+			entityManager.close();
+		}
 	}
 }
